@@ -20,13 +20,14 @@
 
 use RpayRatePay\Component\Service\SessionLoader;
 use RpayRatePay\Component\Service\ShopwareUtil;
+use RpayRatePay\Services\PaymentMethodsService;
 use Shopware\Components\CSRFWhitelistAware;
 use RpayRatePay\Component\Service\PaymentProcessor;
 use RpayRatePay\Component\Model\ShopwareCustomerWrapper;
 use RpayRatePay\Component\Service\Logger;
-use \RpayRatePay\Component\Service\ConfigLoader;
-use \Shopware\Plugins\Community\Frontend\RpayRatePay\Services\DfpService;
-use Shopware\Plugins\Community\Frontend\RpayRatePay\Services\ProfileConfigService;
+use RpayRatePay\Component\Service\ConfigLoader;
+use RpayRatePay\Services\DfpService;
+use RpayRatePay\Services\ProfileConfigService;
 
 class Shopware_Controllers_Frontend_RpayRatepay extends Shopware_Controllers_Frontend_Payment implements CSRFWhitelistAware
 {
@@ -267,7 +268,9 @@ class Shopware_Controllers_Frontend_RpayRatepay extends Shopware_Controllers_Fro
      */
     private function _proceedPayment()
     {
-        $resultRequest = $this->_modelFactory->callPaymentRequest();
+        $sessionService = new SessionLoader(Shopware()->Session());
+        $paymentRequestData = $sessionService->getPaymentRequestData();
+        $resultRequest = $this->_modelFactory->callPaymentRequest($paymentRequestData);
 
         if ($resultRequest->isSuccessful()) {
             $paymentProcessor = new PaymentProcessor($this->get('db'), new ConfigLoader($this->get('db')));
@@ -322,6 +325,10 @@ class Shopware_Controllers_Frontend_RpayRatepay extends Shopware_Controllers_Fro
                 ]
             );
         } else {
+            /** @var $resultRequest RatePAY\Model\Response\PaymentRequest */
+            if($resultRequest->getReasonCode() === 703) {
+                PaymentMethodsService::getInstance()->lockPaymentMethodForCustomer($paymentRequestData->getCustomer(), strtolower($paymentRequestData->getMethod()));
+            }
             $this->_customerMessage = $resultRequest->getCustomerMessage();
             $this->_error();
         }
