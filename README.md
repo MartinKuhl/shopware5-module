@@ -27,6 +27,7 @@
 
 ### Version 5.4.8 - WIP
 * RATEPLUG-31: lock payment methods for customer if reason code 703
+* RATEPLUG-66: credit/debit fix gateway requests
 
 ### Version 5.4.7 - Released 2020-01-15
 * RATEPLUG-33: fix namespaces
