@@ -16,16 +16,6 @@ class PaymentFilterSubscriber implements \Enlight\Event\SubscriberInterface
      */
     protected $_object;
 
-    /**
-     * @var string
-     */
-    private $pluginDir;
-
-    public function __construct()
-    {
-        $this->pluginDir = __DIR__ . '/../../';
-    }
-
     public static function getSubscribedEvents()
     {
         return [
