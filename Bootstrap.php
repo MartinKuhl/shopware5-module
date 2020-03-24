@@ -188,7 +188,9 @@ class Shopware_Plugins_Frontend_RpayRatePay_Bootstrap extends Shopware_Component
             new \RpayRatePay\Bootstrapping\ShopConfigSetup($this),
             new \RpayRatePay\Bootstrapping\CronjobSetup($this),
             new \RpayRatePay\Bootstrapping\AdditionalOrderAttributeSetup($this),
-            new \RpayRatePay\Bootstrapping\UserAttributeSetup($this)
+            new \RpayRatePay\Bootstrapping\UserAttributeSetup($this),
+            new \RpayRatePay\Bootstrapping\PaymentStatusesSetup($this),
+            new \RpayRatePay\Bootstrapping\DeliveryStatusesSetup($this),
         ];
 
         $this->_dropOrderAdditionalAttributes();
