@@ -12,10 +12,6 @@ use Shopware_Controllers_Frontend_Checkout;
 
 class PaymentFilterSubscriber implements \Enlight\Event\SubscriberInterface
 {
-    /**
-     * @var
-     */
-    protected $_object;
 
     public static function getSubscribedEvents()
     {
